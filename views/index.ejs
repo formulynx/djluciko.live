@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ Luciko LiveHouse!</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="main-content">
+      <% if (isMember) { %>
+      <script src="https://player.live-video.net/1.24.0/amazon-ivs-player.min.js"></script>
+      <video id="video-player" class="stream" playsinline controls controlsList="nodownload"></video>
+      <script>
+      (function (IVSPlayerPackage) {
+        // First, check if the browser supports the IVS player.
+        if (!IVSPlayerPackage.isPlayerSupported) {
+          console.warn("The current browser does not support the IVS player.");
+          return;
+        }
+        const player = IVSPlayerPackage.create();
+        console.log("IVS Player version:", player.getVersion());
+        player.attachHTMLVideoElement(document.getElementById("video-player"));
+        player.load("<%= ivsStreamUrl %>");
+        player.setVolume(0.5);
+        player.setAutoplay(true);
+      })(window.IVSPlayer);
+      </script>
+      <% } else { %>
+      <iframe class="twitch_top" src="https://player.twitch.tv?channel=djluciko&parent=<%= domain %>" allowfullscreen="" scrolling="no" frameborder="0" allow="autoplay; fullscreen" title="Twitch" sandbox="allow-modals allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation"></iframe>
+      <% } %>   
+    </div>
+    <div class="sidebar">
+      <div class="discord_login">
+        <% if (user) { %>
+        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="discord_icon" alt="<%= user.username %>" onerror="this.style.display='none';"/>
+        <% } %>
+        <% if (authed) { %>
+        <a href="/logout" class="discord_button">Logout</a>
+        <% } else { %>
+        <a href="/auth/discord" class="discord_button">Discord Login</a>
+        <% } %>
+      </div>
+      <div class="chatbox_wrapper">
+        <iframe frameborder="0" scrolling="no" id="lucikodayo" class="chatbox" src="https://www.twitch.tv/embed/lucikodayo/chat?darkpopout&parent=<%= domain %>"></iframe>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
